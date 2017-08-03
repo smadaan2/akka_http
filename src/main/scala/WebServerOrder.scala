@@ -38,13 +38,6 @@ object WebServerOrder extends App {
       path("items" / LongNumber) { id =>
         val maybeItem: Future[Option[Item]] = fetchItem(id)
 
-        /*
-                  onSuccess(maybeItem) {
-                    case Some(item) => complete(item)
-                    case None       => complete(StatusCodes.NotFound)
-                  }
-        */
-
         onComplete(maybeItem) {
           case Success(Some(item)) => complete(item)
           case Success(None) => complete(StatusCodes.NotFound)
@@ -54,7 +47,7 @@ object WebServerOrder extends App {
     }
 
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+  println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
   StdIn.readLine()
   bindingFuture
     .flatMap(_.unbind()) // trigger unbinding from the port
